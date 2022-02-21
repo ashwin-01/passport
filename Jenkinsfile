@@ -21,6 +21,28 @@ pipeline{
               }
             }
           }
+          stage("Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+    
+     stage('Deploy to artifactory'){
+        steps{
+        rtUpload(
+         serverId : 'jfrog-server',
+         spec :'''{
+           "files" :[
+           {
+           "pattern":"target/*.jar",
+           "target":"art-mav-loc"
+           }
+           ]
+         }''',
+         
+      )
+      }
+     }
 
   }
         post {  
